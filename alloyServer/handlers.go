@@ -2,29 +2,87 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	"io"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Welcome!")
-}
-
-func TodoIndex(w http.ResponseWriter, r *http.Request) {
-	todos := Todos{
-		Todo{Name: "Write presentation"},
-		Todo{Name: "Host meetup"},
+func Create(w http.ResponseWriter, r *http.Request) {
+	var user User
+	var err error
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		panic(err)
+	}
+	if err = r.Body.Close(); err != nil {
+		panic(err)
 	}
 
-	if err := json.NewEncoder(w).Encode(todos); err != nil {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	if err = json.Unmarshal(body, &user); err != nil {
+		w.WriteHeader(http.StatusBadRequest) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			panic(err)
+		}
+		return
+	}
+
+	user, _ = RepoCreate(user)
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(user); err != nil {
 		panic(err)
 	}
 }
 
-func TodoShow(w http.ResponseWriter, r *http.Request) {
+func Update(w http.ResponseWriter, r *http.Request) {
+	var user User
+	var err error
+
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		panic(err)
+	}
+	if err = r.Body.Close(); err != nil {
+		panic(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	if err = json.Unmarshal(body, &user); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			panic(err)
+		}
+		return
+	}
+
+	if user, err = RepoUpdate(user); err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	if err = json.NewEncoder(w).Encode(user); err != nil {
+		w.WriteHeader(http.StatusOK)
+		panic(err)
+	}
+}
+
+func Read(w http.ResponseWriter, r *http.Request) {
+	var user User
+	var err error
 	vars := mux.Vars(r)
-	todoId := vars["todoId"]
-	fmt.Fprintln(w, "Todo show:", todoId)
+	name := vars["name"]
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	if user, err = RepoRead(name); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if err = json.NewEncoder(w).Encode(user); err != nil {
+		w.WriteHeader(http.StatusOK)
+		panic(err)
+	}
 }

@@ -13,21 +13,21 @@ type Routes []Route
 
 var routes = Routes{
 	Route{
-		"Index",
-		"GET",
-		"/",
-		Index,
+		"Create",
+		"POST",
+		"/api/susie/game1",
+		Create,
 	},
 	Route{
-		"TodoIndex",
+		"Read",
 		"GET",
-		"/todos",
-		TodoIndex,
+		"/api/susie/game1/{name}",
+		Read,
 	},
 	Route{
-		"TodoShow",
-		"GET",
-		"/todos/{todoId}",
-		TodoShow,
+		"Update",
+		"PUT",
+		"/api/susie/game1/{name}",
+		Update,
 	},
 }

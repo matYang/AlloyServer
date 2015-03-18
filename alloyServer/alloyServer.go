@@ -1,13 +1,28 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+
+	"github.com/icub3d/graceful"
 )
 
 func main() {
+	// Listen for the SIGTERM.
+	sigs := make(chan os.Signal)
+	signal.Notify(sigs, syscall.SIGTERM)
+	go func() {
+		<-sigs
+		log.Print("got SIGHUP, shutting down.")
+		graceful.Close()
+	}()
+
+	// Start the server.
+	fmt.Println("Using PID:", os.Getpid())
 
 	router := NewRouter()
-
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(graceful.ListenAndServe(":8050", router))
 }
