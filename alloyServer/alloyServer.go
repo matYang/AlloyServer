@@ -12,6 +12,7 @@ import (
 
 func main() {
 	// Listen for the SIGTERM.
+	// Graceful shutdown
 	sigs := make(chan os.Signal)
 	signal.Notify(sigs, syscall.SIGTERM)
 	go func() {

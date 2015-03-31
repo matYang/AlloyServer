@@ -15,19 +15,13 @@ var routes = Routes{
 	Route{
 		"Create",
 		"POST",
-		"/api/susie/game1",
+		"/api/alloy",
 		Create,
 	},
 	Route{
 		"Read",
 		"GET",
-		"/api/susie/game1/{name}",
+		"/api/alloy/{name}",
 		Read,
-	},
-	Route{
-		"Update",
-		"PUT",
-		"/api/susie/game1/{name}",
-		Update,
 	},
 }
