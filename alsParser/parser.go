@@ -15,9 +15,9 @@ var (
 const (
 	//TODO Find a way to initialize current directory
 	CURRENTPATH = "."
-	JSONPATH    = string(os.PathSeparator) + "json" + string(os.PathSeparator)
-	PYPATH      = string(os.PathSeparator) + "py" + string(os.PathSeparator)
-	ALSPATH     = string(os.PathSeparator) + "als" + string(os.PathSeparator)
+	JSONPATH    = CURRENTPATH + string(os.PathSeparator) + "json" + string(os.PathSeparator)
+	PYPATH      = CURRENTPATH + string(os.PathSeparator) + "py" + string(os.PathSeparator)
+	ALSPATH     = CURRENTPATH + string(os.PathSeparator) + "als" + string(os.PathSeparator)
 
 	WORKLOAD = 3
 )
@@ -65,6 +65,8 @@ func parseToAls(user dataModel.User) {
 
 func invokeAls(user dataModel.User) {
 
+	//run alloy here
+	returnToSender(user)
 }
 
 func returnToSender(user dataModel.User) {

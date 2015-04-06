@@ -1,8 +1,8 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/matYang/AlloyServer/alsParser"
 	"github.com/matYang/AlloyServer/dataModel"
 	"github.com/matYang/AlloyServer/utility"
@@ -24,8 +24,9 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	arrSize := bytes.Index(body, []byte{0})
-	data := string(body[:arrSize])
+	data := string(body[:])
+
+	//fmt.Println(data)
 
 	//fill in the data for user
 	responseChan := make(chan dataModel.Response)
