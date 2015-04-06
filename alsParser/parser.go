@@ -24,9 +24,9 @@ const (
 
 func init() {
 	parseChan = make(chan dataModel.User)
-	utility.CreateDirectoryIfNotExist(CURRENTPATH + JSONPATH)
-	utility.CreateDirectoryIfNotExist(CURRENTPATH + PYPATH)
-	utility.CreateDirectoryIfNotExist(CURRENTPATH + ALSPATH)
+	utility.CreateDirectoryIfNotExist(JSONPATH)
+	utility.CreateDirectoryIfNotExist(PYPATH)
+	utility.CreateDirectoryIfNotExist(ALSPATH)
 }
 
 func RequestParsing(user dataModel.User) {
