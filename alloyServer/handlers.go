@@ -46,3 +46,12 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 }
+
+func TestAlive(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	var response dataModel.Response
+	response.Result = "Test Success"
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		panic(err)
+	}
+}
