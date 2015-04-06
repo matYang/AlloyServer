@@ -20,7 +20,7 @@ var routes = Routes{
 	},
 	Route{
 		"TestAlive",
-		"Get",
+		"GET",
 		"/",
 		TestAlive,
 	},
