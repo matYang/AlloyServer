@@ -26,14 +26,3 @@ func RepoCreate(u User) (User, error) {
 	users = append(users, u)
 	return u, nil
 }
-
-func RepoUpdate(u User) (User, error) {
-	for i, t := range users {
-		if t.Name == u.Name {
-			users[i] = u
-			return u, nil
-		}
-	}
-	// return empty Todo if not found
-	return User{}, errors.New("NOTFOUND")
-}
