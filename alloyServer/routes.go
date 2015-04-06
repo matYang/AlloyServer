@@ -18,10 +18,4 @@ var routes = Routes{
 		"/api/alloy",
 		Create,
 	},
-	Route{
-		"Read",
-		"GET",
-		"/api/alloy/{name}",
-		Read,
-	},
 }

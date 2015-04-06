@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"alsParser"
 
 	"github.com/icub3d/graceful"
 )
@@ -20,6 +21,8 @@ func main() {
 		log.Print("got SIGHUP, shutting down.")
 		graceful.Close()
 	}()
+
+	alsParser.RunParser()
 
 	// Start the server.
 	fmt.Println("Using PID:", os.Getpid())

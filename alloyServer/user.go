@@ -1,10 +1,7 @@
 package main
 
-import "time"
-
 type User struct {
-	Name string `json:"name"`
-	Data string `json:"data"`
+	Id 	 		string
+	Data 		string
+	SenderChan *chan Response
 }
-
-type Users []User

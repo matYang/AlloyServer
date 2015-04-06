@@ -1,4 +1,4 @@
-package main
+package alsParser
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"utility"
+	"main"
 )
 
 var (
@@ -15,9 +16,11 @@ var (
 const (
 	//TODO Find a way to initialize current directory
 	CURRENTPATH = "."
-	JSONPATH    = os.PathSeparator + "json"
-	PYPATH      = os.PathSeparator + "py"
-	ALSPATH     = os.PathSeparator + "als"
+	JSONPATH    = os.PathSeparator + "json" + os.PathSeparator
+	PYPATH      = os.PathSeparator + "py" + os.PathSeparator
+	ALSPATH     = os.PathSeparator + "als" + os.PathSeparator
+
+	WORKLOAD 	= 3;
 )
 
 func init() {
@@ -32,7 +35,14 @@ func RequestParsing(user User) {
 }
 
 //Another goroutine, easier to do ATC later on
-func PendingParsing() {
+func RunParser() {
+	for i := 0; i < WORKLOAD; i++ {
+		go dispatch()
+	}
+
+}
+
+func dispatch() {
 	for {
 		select {
 		case user := <-parseChan:
@@ -40,16 +50,31 @@ func PendingParsing() {
 			parseToAls(user)
 		}
 	}
-
 }
 
 func parseToAls(user User) {
 	// write whole the body
-	err = ioutil.WriteFile(user.Name+".json", user.Data, 0644)
+	err = ioutil.WriteFile(JSONPATH + user.Id + ".json", user.Data, 0644)
 	if err != nil {
 		panic(err)
 	}
 
 	//execute the python script, at a specific location
 
+
+	invokeAls(user);
+}
+
+
+func invokeAls(user User) {
+
+}
+
+func returnToSender(user User) {
+
+
+	var response Response;
+
+	//send response back using sender channel
+	*(user.SenderChan) <- response;
 }

@@ -5,6 +5,9 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"bytes"
+	"utility"
+	"alsParser"
 
 	"github.com/gorilla/mux"
 )
@@ -22,35 +25,26 @@ func Create(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	if err = json.Unmarshal(body, &user); err != nil {
-		w.WriteHeader(http.StatusBadRequest) // unprocessable entity
-		if err := json.NewEncoder(w).Encode(err); err != nil {
-			panic(err)
-		}
-		return
-	}
+	arrSize := bytes.Index(body, []byte{0})
+	data := string(body[:n])
 
-	user, _ = RepoCreate(user)
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(user); err != nil {
-		panic(err)
-	}
-}
-
-func Read(w http.ResponseWriter, r *http.Request) {
+	//fill in the data for user
+	responseChan := make(chan Response);
 	var user User
-	var err error
-	vars := mux.Vars(r)
-	name := vars["name"]
-
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-
-	if user, err = RepoRead(name); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+	user.Data = data
+	user.Id, err = utility.UUID()
+	if err != nil {
+		panic (err)
 	}
-	if err = json.NewEncoder(w).Encode(user); err != nil {
-		w.WriteHeader(http.StatusOK)
+	user.SenderChan = &responseChan
+
+	//request parse and await response
+	alsParser.RequestParsing(user);
+	//no need to manually close the channel
+	response := <-responseChan
+
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(response); err != nil {
 		panic(err)
 	}
 }

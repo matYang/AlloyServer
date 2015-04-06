@@ -17,7 +17,6 @@ func CreateDirectoryIfNotExist(path string) error {
 	}
 }
 
-//判断目录是否不存在
 func DirectoryNotExist(path string) bool {
 	src, err := os.Stat(path)
 	if os.IsNotExist(err) {
