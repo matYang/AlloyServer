@@ -2,35 +2,34 @@ package alsParser
 
 import (
 	"fmt"
-	"github.com/kardianos/osext"
+	"github.com/matYang/AlloyServer/dataModel"
+	"github.com/matYang/AlloyServer/utility"
 	"io/ioutil"
 	"os"
-	"utility"
-	"main"
 )
 
 var (
-	parseChan chan User
+	parseChan chan dataModel.User
 )
 
 const (
 	//TODO Find a way to initialize current directory
 	CURRENTPATH = "."
-	JSONPATH    = os.PathSeparator + "json" + os.PathSeparator
-	PYPATH      = os.PathSeparator + "py" + os.PathSeparator
-	ALSPATH     = os.PathSeparator + "als" + os.PathSeparator
+	JSONPATH    = string(os.PathSeparator) + "json" + string(os.PathSeparator)
+	PYPATH      = string(os.PathSeparator) + "py" + string(os.PathSeparator)
+	ALSPATH     = string(os.PathSeparator) + "als" + string(os.PathSeparator)
 
-	WORKLOAD 	= 3;
+	WORKLOAD = 3
 )
 
 func init() {
-	parseChan = make(chan User)
+	parseChan = make(chan dataModel.User)
 	utility.CreateDirectoryIfNotExist(CURRENTPATH + JSONPATH)
 	utility.CreateDirectoryIfNotExist(CURRENTPATH + PYPATH)
 	utility.CreateDirectoryIfNotExist(CURRENTPATH + ALSPATH)
 }
 
-func RequestParsing(user User) {
+func RequestParsing(user dataModel.User) {
 	parseChan <- user
 }
 
@@ -52,29 +51,26 @@ func dispatch() {
 	}
 }
 
-func parseToAls(user User) {
+func parseToAls(user dataModel.User) {
 	// write whole the body
-	err = ioutil.WriteFile(JSONPATH + user.Id + ".json", user.Data, 0644)
+	err := ioutil.WriteFile(JSONPATH+user.Id+".json", []byte(user.Data), 0644)
 	if err != nil {
 		panic(err)
 	}
 
 	//execute the python script, at a specific location
 
-
-	invokeAls(user);
+	invokeAls(user)
 }
 
-
-func invokeAls(user User) {
+func invokeAls(user dataModel.User) {
 
 }
 
-func returnToSender(user User) {
+func returnToSender(user dataModel.User) {
 
-
-	var response Response;
+	var response dataModel.Response
 
 	//send response back using sender channel
-	*(user.SenderChan) <- response;
+	*(user.SenderChan) <- response
 }

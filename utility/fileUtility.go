@@ -15,6 +15,7 @@ func CreateDirectoryIfNotExist(path string) error {
 	if DirectoryNotExist(path) {
 		return CreateDirectory(path)
 	}
+	return nil
 }
 
 func DirectoryNotExist(path string) bool {

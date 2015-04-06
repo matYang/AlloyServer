@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view nodetheme="Martha">
+
+<projection> <type name="Result"/> </projection>
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="CS444"/>
+   <type name="ECE100"/>
+   <type name="ECE459"/>
+   <type name="Int"/>
+   <type name="PSYCH101"/>
+   <type name="SE101"/>
+   <type name="String"/>
+   <type name="univ"/>
+   <type name="seq/Int"/>
+</node>
+
+<node shape="Box">
+   <type name="ATE"/>
+</node>
+
+<node shape="Ellipse" color="Blue">
+   <type name="Result"/>
+</node>
+
+<node shape="House">
+   <type name="Linkage"/>
+</node>
+
+<node shape="Trapezoid">
+   <type name="Core"/>
+</node>
+
+<node visible="yes" color="Green">
+   <type name="Course"/>
+</node>
+
+<node visible="yes" color="Yellow">
+   <type name="List"/>
+</node>
+
+<edge label="">
+   <relation name="$result"> <type name="List"/> <type name="Course"/> </relation>
+   <relation name="$substitutions"> <type name="Course"/> <type name="Course"/> </relation>
+</edge>
+
+<edge visible="no">
+   <relation name="rawresult"> <type name="List"/> <type name="Course"/> </relation>
+</edge>
+
+<edge visible="no" attribute="yes" label="transcript">
+   <relation name="$transcript"> <type name="Course"/> <type name="Int"/> </relation>
+</edge>
+
+<edge visible="no" label="">
+   <relation name="$courses"> <type name="List"/> <type name="Course"/> </relation>
+</edge>
+
+</view>
+
+</alloy>

@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
+	"github.com/icub3d/graceful"
+	"github.com/matYang/AlloyServer/alsParser"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
-	"alsParser"
-
-	"github.com/icub3d/graceful"
 )
 
 func main() {

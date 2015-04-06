@@ -1,19 +1,18 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"github.com/matYang/AlloyServer/alsParser"
+	"github.com/matYang/AlloyServer/dataModel"
+	"github.com/matYang/AlloyServer/utility"
 	"io"
 	"io/ioutil"
 	"net/http"
-	"bytes"
-	"utility"
-	"alsParser"
-
-	"github.com/gorilla/mux"
 )
 
 func Create(w http.ResponseWriter, r *http.Request) {
-	var user User
+	var user dataModel.User
 	var err error
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
@@ -26,20 +25,19 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	arrSize := bytes.Index(body, []byte{0})
-	data := string(body[:n])
+	data := string(body[:arrSize])
 
 	//fill in the data for user
-	responseChan := make(chan Response);
-	var user User
+	responseChan := make(chan dataModel.Response)
 	user.Data = data
 	user.Id, err = utility.UUID()
 	if err != nil {
-		panic (err)
+		panic(err)
 	}
 	user.SenderChan = &responseChan
 
 	//request parse and await response
-	alsParser.RequestParsing(user);
+	alsParser.RequestParsing(user)
 	//no need to manually close the channel
 	response := <-responseChan
 
