@@ -6,6 +6,7 @@ import (
 	"github.com/matYang/AlloyServer/utility"
 	"io/ioutil"
 	"os"
+	"os/exec"
 )
 
 var (
@@ -15,17 +16,13 @@ var (
 const (
 	//TODO Find a way to initialize current directory
 	CURRENTPATH = "."
-	JSONPATH    = CURRENTPATH + string(os.PathSeparator) + "json" + string(os.PathSeparator)
-	PYPATH      = CURRENTPATH + string(os.PathSeparator) + "py" + string(os.PathSeparator)
 	ALSPATH     = CURRENTPATH + string(os.PathSeparator) + "als" + string(os.PathSeparator)
 
-	WORKLOAD = 3
+	WORKLOAD = 1
 )
 
 func init() {
 	parseChan = make(chan dataModel.User)
-	utility.CreateDirectoryIfNotExist(JSONPATH)
-	utility.CreateDirectoryIfNotExist(PYPATH)
 	utility.CreateDirectoryIfNotExist(ALSPATH)
 }
 
@@ -53,24 +50,24 @@ func dispatch() {
 
 func parseToAls(user dataModel.User) {
 	// write whole the body
-	err := ioutil.WriteFile(JSONPATH+user.Id+".json", []byte(user.Data), 0644)
+	err := ioutil.WriteFile("transcript.json", []byte(user.Data), 0644)
 	if err != nil {
 		panic(err)
 	}
-
-	//execute the python script, at a specific location
 
 	invokeAls(user)
 }
 
 func invokeAls(user dataModel.User) {
-
-	//run alloy here
+	cmd := exec.Command("./test.sh")
+	err := cmd.Run()
+	if err != nil {
+		panic(err)
+	}
 	returnToSender(user)
 }
 
 func returnToSender(user dataModel.User) {
-
 	var response dataModel.Response
 
 	//send response back using sender channel
