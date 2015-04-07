@@ -59,7 +59,7 @@ func parseToAls(user dataModel.User) {
 }
 
 func invokeAls(user dataModel.User) {
-	cmd := exec.Command("./test.sh")
+	cmd := exec.Command("sh", "test.sh")
 	err := cmd.Run()
 	if err != nil {
 		panic(err)
