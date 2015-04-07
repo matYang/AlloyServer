@@ -59,17 +59,20 @@ func parseToAls(user dataModel.User) {
 }
 
 func invokeAls(user dataModel.User) {
+	var response dataModel.Response
 	cmd := exec.Command("sh", "test.sh")
 	err := cmd.Run()
 	if err != nil {
-		panic(err)
+		response.Result = "Damn you Golson!! Parser not working"
+		*(user.SenderChan) <- response
+		return
 	}
-	returnToSender(user)
-}
 
-func returnToSender(user dataModel.User) {
-	var response dataModel.Response
-
-	//send response back using sender channel
+	b, err := ioutil.ReadFile("output")
+	if err != nil {
+		response.Result = "Alloy output not found"
+	} else {
+		response.Result = string(b[:])
+	}
 	*(user.SenderChan) <- response
 }
