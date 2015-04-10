@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"strconv"
 )
 
 var (
@@ -14,16 +15,18 @@ var (
 )
 
 const (
-	//TODO Find a way to initialize current directory
 	CURRENTPATH = "."
-	ALSPATH     = CURRENTPATH + string(os.PathSeparator) + "als" + string(os.PathSeparator)
+	SEPARATOR   = string(os.PathSeparator)
+	ALSPATH     = CURRENTPATH + SEPARATOR + "als"
 
-	WORKLOAD = 1
+	WORKLOAD = 3
 )
 
 func init() {
 	parseChan = make(chan dataModel.User)
-	utility.CreateDirectoryIfNotExist(ALSPATH)
+	for i := 0; i < WORKLOAD; i++ {
+		utility.CreateDirectoryIfNotExist(ALSPATH + strconv.Itoa(i))
+	}
 }
 
 func RequestParsing(user dataModel.User) {
@@ -33,34 +36,35 @@ func RequestParsing(user dataModel.User) {
 //Another goroutine, easier to do ATC later on
 func RunParser() {
 	for i := 0; i < WORKLOAD; i++ {
-		go dispatch()
+		go dispatch(i)
 	}
 
 }
 
-func dispatch() {
+func dispatch(i int) {
+	workerPath := ALSPATH + strconv.Itoa(i) + SEPARATOR
 	for {
 		select {
 		case user := <-parseChan:
 			fmt.Println("Received Parsing Request")
-			parseToAls(user)
+			parseToAls(user, workerPath)
 		}
 	}
 }
 
-func parseToAls(user dataModel.User) {
+func parseToAls(user dataModel.User, workerPath string) {
 	// write whole the body
-	err := ioutil.WriteFile("transcript.json", []byte(user.Data), 0644)
+	err := ioutil.WriteFile(workerPath+"transcript.json", []byte(user.Data), 0644)
 	if err != nil {
 		panic(err)
 	}
 
-	invokeAls(user)
+	invokeAls(user, workerPath)
 }
 
-func invokeAls(user dataModel.User) {
+func invokeAls(user dataModel.User, workerPath string) {
 	var response dataModel.Response
-	cmd := exec.Command("sh", "test.sh")
+	cmd := exec.Command("sh", workerPath+"solve.sh")
 	err := cmd.Run()
 	if err != nil {
 		response.Result = "Damn you Golson!! Parser not working"
@@ -68,7 +72,7 @@ func invokeAls(user dataModel.User) {
 		return
 	}
 
-	b, err := ioutil.ReadFile("output")
+	b, err := ioutil.ReadFile(workerPath + "output")
 	if err != nil {
 		response.Result = "Alloy output not found"
 	} else {
