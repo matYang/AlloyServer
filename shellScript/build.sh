@@ -14,9 +14,9 @@ ALSPATHBASE=$SERVERFOLDERPATH"/als"
 WORKLOAD="3"
 if [ -z "$1" ]
 then
-    WORKLOAD = "3"
+    WORKLOAD="3"
 else
-    WORKLOAD = $1
+    WORKLOAD=$1
 fi
 
 #build latest golang source
