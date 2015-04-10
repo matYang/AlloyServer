@@ -43,4 +43,4 @@ done
 
 #restart the server process
 cd $SERVERFOLDERPATH
-nohup alloyServer &
+nohup alloyServer & > log

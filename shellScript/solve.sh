@@ -9,7 +9,7 @@ JARNAME="alloy4.2.jar "
 MAINCLASS="edu.mit.csail.sdg.alloy4whole.ExampleUsingTheCompiler"
 
 #parse json, if fail then do not run alloy
-python $TARGETPARSER --json_file $SOURCEJSON
+python $TARGETPARSER --from_json_file  $SOURCEJSON
 if [[ $? -ne 0 ]] ; then
     exit 1
 fi
