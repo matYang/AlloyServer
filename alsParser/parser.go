@@ -64,7 +64,7 @@ func parseToAls(user dataModel.User, workerPath string) {
 
 func invokeAls(user dataModel.User, workerPath string) {
 	var response dataModel.Response
-	cmd := exec.Command("sh", workerPath+"solve.sh")
+	cmd := exec.Command("bash", workerPath+"solve.sh")
 	err := cmd.Run()
 	if err != nil {
 		response.Result = "Damn you Golson!! Parser not working"

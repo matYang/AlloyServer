@@ -33,12 +33,12 @@ fi
 ps aux | grep -ie alloyServer | awk '{print $2}' | xargs kill -9
 
 #prepare file structure
-for i in {0..$WORKLOAD}
-    do
+for (( i=0; i<${WORKLOAD}; i++ ));
+do
        rm -r $ALSPATHBASE$i
        mkdir $ALSPATHBASE$i
-       cp $PYTHONSOURCEPATH/* $ALSPATHBASE$i"/"
-       cp $ALLOYSOURCEPATH/*  $ALSPATHBASE$i"/"
+       cp $PYTHONSOURCEPATH/* $ALSPATHBASE$i
+       cp $ALLOYSOURCEPATH/*  $ALSPATHBASE$i
 done
 
 #restart the server process
