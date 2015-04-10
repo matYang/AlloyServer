@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#maintain current working directory
+cd "$(dirname "$0")"
+
 SOURCEJSON="transcript.json"
 INTERMEDIATEFILE="transcript.als"
 TARGETPARSER="transcript_parser.py"
