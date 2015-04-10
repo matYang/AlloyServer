@@ -13,4 +13,4 @@ python $TARGETPARSER --from_json_file  $SOURCEJSON
 if [[ $? -ne 0 ]] ; then
     exit 1
 fi
-java -cp $JARNAME $MAINCLASS $TARGETALS
+java -cp $JARNAME $MAINCLASS $TARGETALS > output

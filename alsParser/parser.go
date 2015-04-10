@@ -67,6 +67,7 @@ func invokeAls(user dataModel.User, workerPath string) {
 	cmd := exec.Command("bash", workerPath+"solve.sh")
 	err := cmd.Run()
 	if err != nil {
+		panic(err)
 		response.Result = "Damn you Golson!! Parser not working"
 		*(user.SenderChan) <- response
 		return
